@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceChief — Хрономер текста</title>
+  <meta name="description" content="Хрономер текста для озвучки: секунды, быстрый и медленный темп, слова, символы, символы без пробелов и страницы A4." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="grid-overlay"></div>
+
+  <main class="page-shell">
+    <section class="hero-card">
+      <div class="hero-topline">VoiceChief • GitHub Pages</div>
+      <h1>Хрономер текста для озвучки</h1>
+      <p class="hero-copy">
+        Считает примерный хронометраж, быстрый и медленный темп, слова, символы,
+        символы без пробелов и страницы A4. Работает прямо в браузере — без сервера.
+      </p>
+
+      <div class="hero-modes" role="tablist" aria-label="Режим расчёта">
+        <button class="mode-chip is-active" data-mode="kupigolos" type="button">Базовый</button>
+        <button class="mode-chip" data-mode="voicechief" type="button">VoiceChief Smart</button>
+      </div>
+
+      <div class="formula-note" id="formulaNote">
+        Базовый режим: логика, близкая к исследованному хрономеру.
+      </div>
+    </section>
+
+    <section class="app-card">
+      <div class="input-side">
+        <label class="input-label" for="sourceText">Вставь текст для расчёта</label>
+        <textarea id="sourceText" placeholder="Например: Добрый день! Мы помогаем брендам звучать ярче, чище и убедительнее..."></textarea>
+
+        <div class="action-row">
+          <button class="primary-btn" id="clearBtn" type="button">Очистить</button>
+          <button class="ghost-btn" id="sampleBtn" type="button">Вставить пример</button>
+        </div>
+
+        <div class="mini-info">
+          <span>Формула страниц: <strong>1 стр. ≈ 2000 символов с пробелами</strong></span>
+          <span>Хронометраж: по <strong>символам без пробелов</strong></span>
+        </div>
+      </div>
+
+      <div class="result-side">
+        <div class="time-panel">
+          <div class="time-main">
+            <div class="time-label">Основной хронометраж</div>
+            <div class="time-value" id="timingMain">0 сек</div>
+          </div>
+
+          <div class="time-split">
+            <div class="time-box">
+              <span>Быстрый темп</span>
+              <strong id="timingFast">0 сек</strong>
+            </div>
+            <div class="time-box">
+              <span>Медленный темп</span>
+              <strong id="timingSlow">0 сек</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-title">Слов</span>
+            <strong class="stat-value" id="wordsCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-title">Символов</span>
+            <strong class="stat-value" id="symbolsCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-title">Без пробелов</span>
+            <strong class="stat-value" id="cleanSymbolsCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-title">Страниц A4</span>
+            <strong class="stat-value" id="pagesCount">0.0</strong>
+          </article>
+        </div>
+
+        <div class="details-card">
+          <div class="details-head">
+            <h2>Как считает</h2>
+            <span id="detailsBadge">Базовый режим</span>
+          </div>
+          <ul id="detailsList"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
