@@ -164,8 +164,8 @@ function render() {
 }
 
 function prepareTextForTiming(text) {
-  return text.replace(/\b\d[\d ]*\b/g, num => {
-    return numberToWords(num.replace(/\s/g, ''));
+  return text.replace(/\b\d+\b/g, num => {
+    return numberToWords(num);
   });
 }
 
