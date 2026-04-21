@@ -385,3 +385,49 @@ textarea:focus {
     flex-direction: column;
   }
 }
+.author-card {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(16px);
+}
+
+.author-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.author-text strong {
+  display: block;
+  font-size: 18px;
+}
+
+.author-text span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.author-btn {
+  text-decoration: none;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #ff7b51, #ef5b2f);
+  color: white;
+  transition: 0.2s;
+}
+
+.author-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(255,107,61,0.3);
+}
+
+.author-note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
