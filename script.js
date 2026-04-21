@@ -30,8 +30,7 @@ const MODE_CONFIG = {
       'Основной хронометраж ≈ cleanSymbols / 14.1',
       'Быстрый темп ≈ cleanSymbols / 16.4',
       'Медленный темп ≈ cleanSymbols / 11.8',
-      'Страницы A4 ≈ symbols / 2000',
-      'Цифры считаются как слова только внутри расчёта'
+      'Страницы A4 ≈ symbols / 2000'
     ],
     calc(text) {
       const symbols = text.length;
@@ -57,8 +56,7 @@ const MODE_CONFIG = {
       'База по cleanSymbols, но с поправками на структуру текста',
       'Больше коротких строк и восклицаний → темп быстрее',
       'Больше цифр, аббревиатур и длинных предложений → темп медленнее',
-      'Страницы A4 всё так же считаются по symbols / 2000',
-      'Цифры считаются как слова только внутри расчёта'
+      'Страницы A4 всё так же считаются по symbols / 2000'
     ],
     calc(text) {
       const symbols = text.length;
@@ -66,7 +64,7 @@ const MODE_CONFIG = {
       const cleanSymbols = prepared.replace(/\s/g, '').length;
       const words = countWords(text);
 
-      const score = calculateSmartScore(prepared, words);
+      const score = calculateSmartScore(text, words);
       let cpsMain = 14.2;
       let cpsFast = 16.6;
       let cpsSlow = 11.9;
@@ -157,173 +155,7 @@ function render() {
   wordsCount.textContent = result.words.toLocaleString('ru-RU');
   symbolsCount.textContent = result.symbols.toLocaleString('ru-RU');
   cleanSymbolsCount.textContent = result.cleanSymbols.toLocaleString('ru-RU');
-  pagesCount.textContent = result.pages.toLocaleString('ru-RU', {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1
-  });
-}
-
-function numberToWords(num) {
-  num = String(num).trim();
-  if (!/^\d+$/.test(num)) return num;
-  if (num === '0') return 'ноль';
-
-  const unitsMale = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-  const unitsFemale = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-
-  const teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
-
-  const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
-
-  const hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
-
-  const scales = [
-    ['', '', '', 'm'],
-    ['тысяча', 'тысячи', 'тысяч', 'f'],
-    ['миллион', 'миллиона', 'миллионов', 'm'],
-    ['миллиард', 'миллиарда', 'миллиардов', 'm']
-  ];
-
-  function getPlural(n, one, two, five) {
-    n = n % 100;
-    if (n >= 11 && n <= 14) return five;
-    n = n % 10;
-    if (n === 1) return one;
-    if (n >= 2 && n <= 4) return two;
-    return five;
-  }
-
-  function triadToWords(n, gender) {
-    const result = [];
-
-    const h = Math.floor(n / 100);
-    const t = Math.floor((n % 100) / 10);
-    const u = n % 10;
-
-    if (h) result.push(hundreds[h]);
-
-    if (t === 1) {
-      result.push(teens[u]);
-    } else {
-      if (t) result.push(tens[t]);
-      if (u) result.push(gender === 'f' ? unitsFemale[u] : unitsMale[u]);
-    }
-
-    return result;
-  }
-
-  const chunks = num
-    .split('')
-    .reverse()
-    .join('')
-    .match(/.{1,3}/g)
-    .map(x => x.split('').reverse().join(''))
-    .reverse();
-
-  // защита: если число слишком большое, просто не разворачиваем его
-  if (chunks.length > scales.length) {
-    return num;
-  }
-
-  const parts = [];
-
-  chunks.forEach((chunk, i) => {
-    const n = parseInt(chunk, 10);
-    if (!n) return;
-
-    const scaleIndex = chunks.length - i - 1;
-    const scale = scales[scaleIndex];
-    if (!scale) {
-      parts.push(chunk);
-      return;
-    }
-
-    const words = triadToWords(n, scale[3]);
-    parts.push(...words);
-
-    if (scaleIndex > 0) {
-      parts.push(getPlural(n, scale[0], scale[1], scale[2]));
-    }
-  });
-
-  return parts.join(' ').trim();
-}
-
-function numberToWords(num) {
-  num = String(num);
-  if (!/^\d+$/.test(num)) return num;
-  if (num === '0') return 'ноль';
-
-  const unitsMale = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-  const unitsFemale = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-
-  const teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
-
-  const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
-
-  const hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
-
-  const scales = [
-    ['', '', '', 'm'],
-    ['тысяча', 'тысячи', 'тысяч', 'f'],
-    ['миллион', 'миллиона', 'миллионов', 'm'],
-    ['миллиард', 'миллиарда', 'миллиардов', 'm']
-  ];
-
-  function getPlural(n, one, two, five) {
-    n = n % 100;
-    if (n >= 11 && n <= 14) return five;
-    n = n % 10;
-    if (n === 1) return one;
-    if (n >= 2 && n <= 4) return two;
-    return five;
-  }
-
-  function triadToWords(n, gender) {
-    const result = [];
-
-    const h = Math.floor(n / 100);
-    const t = Math.floor((n % 100) / 10);
-    const u = n % 10;
-
-    if (h) result.push(hundreds[h]);
-
-    if (t === 1) {
-      result.push(teens[u]);
-    } else {
-      if (t) result.push(tens[t]);
-      if (u) result.push(gender === 'f' ? unitsFemale[u] : unitsMale[u]);
-    }
-
-    return result;
-  }
-
-  const parts = [];
-
-  const chunks = num
-    .split('')
-    .reverse()
-    .join('')
-    .match(/.{1,3}/g)
-    .map(x => x.split('').reverse().join(''))
-    .reverse();
-
-  chunks.forEach((chunk, i) => {
-    const n = parseInt(chunk, 10);
-    if (!n) return;
-
-    const scaleIndex = chunks.length - i - 1;
-    const scale = scales[scaleIndex];
-
-    const words = triadToWords(n, scale[3]);
-    parts.push(...words);
-
-    if (scaleIndex > 0) {
-      parts.push(getPlural(n, scale[0], scale[1], scale[2]));
-    }
-  });
-
-  return parts.join(' ').trim();
+  pagesCount.textContent = result.pages.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
 
 modeButtons.forEach(button => {
@@ -351,4 +183,87 @@ sampleBtn.addEventListener('click', () => {
 });
 
 updateDetails();
+function prepareTextForTiming(text) {
+  return text.replace(/\b\d[\d ]*\b/g, num => {
+    return numberToWords(num.replace(/\s/g, ''));
+  });
+}
+
+function numberToWords(num) {
+  num = String(num);
+  if (!/^\d+$/.test(num)) return num;
+  if (num === '0') return 'ноль';
+
+  const unitsMale = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+  const unitsFemale = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+
+  const teens = ['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+
+  const tens = ['', '', 'двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+
+  const hundreds = ['', 'сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+
+  const scales = [
+    ['', '', '', 'm'],
+    ['тысяча', 'тысячи', 'тысяч', 'f'],
+    ['миллион', 'миллиона', 'миллионов', 'm'],
+    ['миллиард', 'миллиарда', 'миллиардов', 'm']
+  ];
+
+  function getPlural(n, one, two, five) {
+    n = n % 100;
+    if (n >= 11 && n <= 14) return five;
+    n = n % 10;
+    if (n === 1) return one;
+    if (n >= 2 && n <= 4) return two;
+    return five;
+  }
+
+  function triadToWords(n, gender) {
+    let result = [];
+
+    let h = Math.floor(n / 100);
+    let t = Math.floor((n % 100) / 10);
+    let u = n % 10;
+
+    if (h) result.push(hundreds[h]);
+
+    if (t === 1) {
+      result.push(teens[u]);
+    } else {
+      if (t) result.push(tens[t]);
+      if (u) result.push(gender === 'f' ? unitsFemale[u] : unitsMale[u]);
+    }
+
+    return result;
+  }
+
+  let parts = [];
+
+  let chunks = num
+    .split('')
+    .reverse()
+    .join('')
+    .match(/.{1,3}/g)
+    .map(x => x.split('').reverse().join(''))
+    .reverse();
+
+  chunks.forEach((chunk, i) => {
+    let n = parseInt(chunk);
+    if (!n) return;
+
+    let scaleIndex = chunks.length - i - 1;
+    let scale = scales[scaleIndex];
+
+    let words = triadToWords(n, scale[3]);
+    parts.push(...words);
+
+    if (scaleIndex > 0) {
+      parts.push(getPlural(n, scale[0], scale[1], scale[2]));
+    }
+  });
+
+  return parts.join(' ').trim();
+}
+
 render();
