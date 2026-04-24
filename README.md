@@ -1,1 +1,1 @@
-**https://voicechief.github.io/chrono/**
+**https://войсшеф.рф**
